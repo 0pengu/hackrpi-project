@@ -31,6 +31,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <link
+          type="text/css"
+          rel="stylesheet"
+          href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"
+        />
         {children}
       </body>
     </html>
