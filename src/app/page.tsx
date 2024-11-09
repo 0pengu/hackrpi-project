@@ -1,13 +1,10 @@
-import MapQuestDirections from "@/components/map/mapquest";
+import "./styles.css"
+import Map from "./Maps";
 
-export default function Home() {
-  return (
-    <div className="w-[70vw] h-[70vh] flex">
-      <MapQuestDirections
-        zoom={3}
-        from={{ lat: 40.847409, lng: -73.82146 }}
-        to={{ lat: 40.829942, lng: -73.862229 }}
-      />
-    </div>
-  );
+export default function App() {
+    return (
+        <div className="App">
+            <Map />
+        </div>
+    );
 }
