@@ -9,7 +9,7 @@ import {addressPoints } from './addressPoints'
 
 export default function Map() {
 
-    let allCrimePoints = [];
+    const allCrimePoints = [];
 
 
     const center:LatLngTuple = [40.71, -74.006];
@@ -17,8 +17,6 @@ export default function Map() {
     const markerPos:LatLngTuple = center;
 
     const start = center;
-
-    addressPoints.map((point) => {console.log("point: ", point)})
 
     useEffect(() => {
         const fetchNYCCrime = async () => {
@@ -56,7 +54,9 @@ export default function Map() {
                     This is a popup
                 </Popup>
             </Marker>
-            {allCrimePoints.map((point, index) => (<Route key={index} source={start} destination={point.slice(0,2)} />))}
+            {/* for some reason cannot make a route to any point in allCrimePoints, reading undefined ? */}
+            {/*<Route source={start} destination={allCrimePoints[5]?.slice(0,2)} />*/}
+            {/*{allCrimePoints.map((point, index) => (<Route key={index} source={start} destination={point.slice(0,2)} />))}*/}
             <Heatmap allPoints={allCrimePoints}/>
         </MapContainer>
     );

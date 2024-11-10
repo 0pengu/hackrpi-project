@@ -5,6 +5,7 @@ import L from "leaflet"
 import "leaflet.heat";
 
 const Heatmap = ({ allPoints }) => {
+
     const map = useMap();
 
     const heatLayerConfig = {
