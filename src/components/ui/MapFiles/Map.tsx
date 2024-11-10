@@ -20,7 +20,7 @@ export default function Map() {
       const fetchOptions = {
         method: "GET",
         headers: {
-          "X-App-Token": process.env.NYCOPENDATA_APP_TOKEN || "",
+          "X-App-Token": import.meta.env.NYCOPENDATA_APP_TOKEN || "",
         },
       };
 
