@@ -115,11 +115,11 @@
       console.log(
         this.options.avoid.map(function (point) {
           return [
-            [point[1] + 0.01, point[0] + 0.01],
-            [point[1] + 0.01, point[0] - 0.01],
-            [point[1] - 0.01, point[0] - 0.01],
-            [point[1] - 0.01, point[0] + 0.01],
-            [point[1] + 0.01, point[0] + 0.01],
+            [point[1] + 0.001, point[0] + 0.001],
+            [point[1] + 0.001, point[0] - 0.001],
+            [point[1] - 0.001, point[0] - 0.001],
+            [point[1] - 0.001, point[0] + 0.001],
+            [point[1] + 0.001, point[0] + 0.001],
           ];
         })
       );
@@ -128,14 +128,13 @@
         points: waypoints.map(function (wp) {
           return [wp.latLng.lng, wp.latLng.lat];
         }),
-        profile: "foot",
-        profile: "foot",
+        profile: "car",
         elevation: true,
         instructions: true,
         locale: "en_US",
         points_encoded: false,
         custom_model: {
-          priority: [{ if: "!in_avoid", multiply_by: "0.1" }],
+          priority: [{ if: "!in_avoid", multiply_by: "0.5" }],
           areas: {
             avoid: {
               type: "Feature",
@@ -144,26 +143,11 @@
                 type: "Polygon",
                 coordinates: avoid.map(function (point) {
                   return [
-                    [
-                      Math.round(point[1] / 1000) * 1000 + 0.001,
-                      Math.round(point[0] / 1000) * 1000 + 0.001,
-                    ],
-                    [
-                      Math.round(point[1] / 1000) * 1000 + 0.001,
-                      Math.round(point[0] / 1000) * 1000 - 0.001,
-                    ],
-                    [
-                      Math.round(point[1] / 1000) * 1000 - 0.001,
-                      Math.round(point[0] / 1000) * 1000 - 0.001,
-                    ],
-                    [
-                      Math.round(point[1] / 1000) * 1000 - 0.001,
-                      Math.round(point[0] / 1000) * 1000 + 0.001,
-                    ],
-                    [
-                      Math.round(point[1] / 1000) * 1000 + 0.001,
-                      Math.round(point[0] / 1000) * 1000 + 0.001,
-                    ],
+                    [point[1] + 0.001, point[0] + 0.001],
+                    [point[1] + 0.001, point[0] - 0.001],
+                    [point[1] - 0.001, point[0] - 0.001],
+                    [point[1] - 0.001, point[0] + 0.001],
+                    [point[1] + 0.001, point[0] + 0.001],
                   ];
                 }),
               },
@@ -173,7 +157,6 @@
         "ch.disable": true,
         "alternative_route.max_paths": 3,
         algorithm: "alternative_route",
-        "alternative_route.max_weight_factor": 25,
       };
 
       var requestBodyString = JSON.stringify(requestBody);

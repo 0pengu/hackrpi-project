@@ -68,7 +68,7 @@ def transform_to_geojson(data: List[Dict]) -> Dict:
 def get_cached_data():
 
     # Build query parameters for NYC API
-    params = {'$limit': 1000, '$select': 'the_geom'}
+    params = {'$limit': 300, '$select': 'the_geom'}
 
     """Get cached NYC location data"""
     response = requests.get(NYC_API_URL, params=params)
