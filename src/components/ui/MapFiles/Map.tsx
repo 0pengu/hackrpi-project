@@ -23,20 +23,20 @@ export default function Map() {
 function MapChild() {
   const map = useMap();
 
-  useEffect(() => {
-    if (!map) return;
-
-    L.Routing.control({
-      waypoints: [start, end],
-      routeWhileDragging: false,
-      showAlternatives: false,
-      // @ts-expect-error - No types for graphHopper
-      router: new L.Routing.graphHopper(
-        import.meta.env.VITE_GRAPH_HOPPER_API_KEY || ""
-      ),
-    }).addTo(map);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if (!map) return;
+  //
+  //   L.Routing.control({
+  //     waypoints: [start, end],
+  //     routeWhileDragging: false,
+  //     showAlternatives: false,
+  //     // @ts-expect-error - No types for graphHopper
+  //     router: new L.Routing.graphHopper(
+  //       import.meta.env.VITE_GRAPH_HOPPER_API_KEY || ""
+  //     ),
+  //   }).addTo(map);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const allPoints = []; // each element is [lat, long, intensity]
   // const allPolygons = []; // each element is a LatLngBound
@@ -91,31 +91,31 @@ function MapChild() {
     fetchNYCData();
   }, []);
 
-  useEffect(() => {
-    if (!map && !dataLoaded) return;
-
-    // @ts-expect-error - No typings for this
-    const graphHopper = new L.Routing.graphHopper(
-      import.meta.env.VITE_GRAPH_HOPPER_API_KEY || "",
-      {
-        avoid: allCrimePoints,
-      }
-    );
-
-    const control = L.Routing.control({
-      routeWhileDragging: false,
-      showAlternatives: true,
-      router: graphHopper,
-      // @ts-expect-error - No typings for this
-      geocoder: new L.Control.Geocoder.nominatim(),
-    });
-
-    control.addTo(map);
-
-    return () => {
-      map.removeControl(control);
-    };
-  }, [map, allCrimePoints, dataLoaded]);
+  // useEffect(() => {
+  //   if (!map && !dataLoaded) return;
+  //
+  //   // @ts-expect-error - No typings for this
+  //   const graphHopper = new L.Routing.graphHopper(
+  //     import.meta.env.VITE_GRAPH_HOPPER_API_KEY || "",
+  //     {
+  //       avoid: allCrimePoints,
+  //     }
+  //   );
+  //
+  //   const control = L.Routing.control({
+  //     routeWhileDragging: false,
+  //     showAlternatives: true,
+  //     router: graphHopper,
+  //     // @ts-expect-error - No typings for this
+  //     geocoder: new L.Control.Geocoder.nominatim(),
+  //   });
+  //
+  //   control.addTo(map);
+  //
+  //   return () => {
+  //     map.removeControl(control);
+  //   };
+  // }, [map, allCrimePoints, dataLoaded]);
 
   return (
     <>
