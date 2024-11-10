@@ -129,29 +129,43 @@
           return [wp.latLng.lng, wp.latLng.lat];
         }),
         profile: "foot",
+        profile: "foot",
         elevation: true,
         instructions: true,
         locale: "en_US",
         points_encoded: false,
         custom_model: {
-          priority: [{ if: "in_avoid", multiply_by: "0" }],
+          priority: [{ if: "!in_avoid", multiply_by: "0.1" }],
           areas: {
             avoid: {
               type: "Feature",
               properties: {},
               geometry: {
                 type: "Polygon",
-                coordinates: [
-                  avoid.map(function (point) {
-                    return [
-                      [point[0] + 1, point[1] + 1],
-                      [point[0] + 1, point[1] - 1],
-                      [point[0] - 1, point[1] - 1],
-                      [point[0] - 1, point[1] + 1],
-                      [point[0] + 1, point[1] + 1],
-                    ];
-                  }),
-                ],
+                coordinates: avoid.map(function (point) {
+                  return [
+                    [
+                      Math.round(point[1] / 1000) * 1000 + 0.001,
+                      Math.round(point[0] / 1000) * 1000 + 0.001,
+                    ],
+                    [
+                      Math.round(point[1] / 1000) * 1000 + 0.001,
+                      Math.round(point[0] / 1000) * 1000 - 0.001,
+                    ],
+                    [
+                      Math.round(point[1] / 1000) * 1000 - 0.001,
+                      Math.round(point[0] / 1000) * 1000 - 0.001,
+                    ],
+                    [
+                      Math.round(point[1] / 1000) * 1000 - 0.001,
+                      Math.round(point[0] / 1000) * 1000 + 0.001,
+                    ],
+                    [
+                      Math.round(point[1] / 1000) * 1000 + 0.001,
+                      Math.round(point[0] / 1000) * 1000 + 0.001,
+                    ],
+                  ];
+                }),
               },
             },
           },
@@ -159,6 +173,7 @@
         "ch.disable": true,
         "alternative_route.max_paths": 3,
         algorithm: "alternative_route",
+        "alternative_route.max_weight_factor": 25,
       };
 
       var requestBodyString = JSON.stringify(requestBody);

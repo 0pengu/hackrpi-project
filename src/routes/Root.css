@@ -1,8 +1,46 @@
 .leaflet-container {
-    height: 90vh;
+    height: 100vh;
     width: 100vw;
+}
+
+.leaflet-top .leaflet-right {
+    border-radius: 20rem !important;
+}
+
+/* Keyframe animation */
+@keyframes blurInFromRight {
+    0% {
+        right: -20;
+        filter: blur(10px); 
+    }
+    100% {
+        right: 0;
+        filter: blur(0px);
+    }
 }
 
 .leaflet-routing-add-waypoint {
     display: none;
+}
+
+.leaflet-bar {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+    padding: 10px;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 0px !important;
+}
+
+.leaflet-routing-geocoder {
+    padding: 5px;
+}
+
+input::placeholder {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.leaflet-routing-remove-waypoint {
+    background: transparent;
 }
