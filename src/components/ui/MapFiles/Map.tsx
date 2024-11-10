@@ -92,9 +92,7 @@ function MapChild() {
 
   useEffect(() => {
     const fetchLowData = async () => {
-      const response = await fetch(
-        "https://data.cityofnewyork.us/resource/t95h-5fsr.json"
-      );
+      const response = await fetch("/api/locations");
 
       if (!response.ok) {
         console.error("Failed to fetch data");
@@ -102,16 +100,14 @@ function MapChild() {
       }
 
       const data = (await response.json()) as {
-        the_geom: { coordinates: number[] };
-      }[];
+        features: { geometry: { coordinates: number[] } }[];
+      };
 
-      data.forEach((point) => {
-        setAllPoints((prev) => {
-          return [
-            ...prev,
-            [point.the_geom.coordinates[1], point.the_geom.coordinates[0], 0.7],
-          ];
-        });
+      data.features.forEach((point) => {
+        setAllPoints((prev) => [
+          ...prev,
+          [point.geometry.coordinates[1], point.geometry.coordinates[0], 0.7],
+        ]);
       });
     };
     fetchLowData();
