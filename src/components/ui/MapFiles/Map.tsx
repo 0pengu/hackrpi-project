@@ -38,10 +38,10 @@ function MapChild({ start, end }: { start: LatLng; end: LatLng }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  let allCrimePoints = [];
+  const allPoints = [];
 
   useEffect(() => {
-    const fetchNYCCrime = async () => {
+    const fetchNYCData = async () => {
       const fetchOptions = {
         method: "GET",
         headers: {
@@ -49,20 +49,38 @@ function MapChild({ start, end }: { start: LatLng; end: LatLng }) {
         },
       };
 
-      const query = "?$where=cmplnt_fr_dt >= '2024-09-29T00:00:00'";
-      const response = await fetch(
-        `https://data.cityofnewyork.us/resource/5jvd-shfj.json${query}`,
-        fetchOptions
-      );
+      // const query = "?$where=cmplnt_fr_dt >= '2024-09-29T00:00:00'";
+      // const response = await fetch(
+      //   `https://data.cityofnewyork.us/resource/5jvd-shfj.json${query}`,
+      //   fetchOptions
+      // );
 
-      if (!response.ok) throw new Error("fetch failed");
-      const data = await response.json();
+      const fetchURLs = [
+        'https://data.cityofnewyork.us/resource/bryy-vqd9.json', // protected intersxns
+        'https://data.cityofnewyork.us/resource/k5k6-6jex.json', // pedestrian plazas
+      ]
 
-      for (const crime of data) {
-        allCrimePoints.push([crime.latitude, crime.longitude, 0.7]);
+      const dataJsons = [];
+
+      for (const url in fetchURLs){
+        const res = await fetch(url, fetchOptions);
+        if (!res.ok ) throw new Error("fetch failed");
+        const data = await res.json();
+
+        dataJsons.push(data);
+      }
+
+      for (const point of dataJsons[0]) {
+        // console.log("Point:" , point.the_geom.coordinates[0]);
+        // console.log("..", [point.the_geom.coordinates[0][0], point.the_geom.coordinates[0][1], 0.7]);
+        // allPoints.push([point.latitude, point.longitude, 0.7]);
+
+        // store as [lat, long, intensity]
+        // except retrieve it as [long, lat]
+        allPoints.push([point.the_geom.coordinates[0][1], point.the_geom.coordinates[0][0], 0.7])
       }
     };
-    fetchNYCCrime();
+    fetchNYCData();
   }, []);
 
   return (
@@ -71,13 +89,7 @@ function MapChild({ start, end }: { start: LatLng; end: LatLng }) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {/* <Marker position={markerPos}>
-        <Popup>This is a popup</Popup>
-        </Marker> */}
-      {allCrimePoints.map((point, index) => (
-        <Route key={index} source={start} destination={point.slice(0, 2)} />
-      ))}
-      <Heatmap allPoints={allCrimePoints} />
+      <Heatmap allPoints={allPoints} />
     </>
   );
 }
