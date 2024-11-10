@@ -1,0 +1,64 @@
+{
+  "hints": {
+    "visited_nodes.sum": 24,
+    "visited_nodes.average": 24.0
+  },
+  "info": {
+    "copyrights": ["GraphHopper", "OpenStreetMap contributors"],
+    "took": 1,
+    "road_data_timestamp": "2024-11-05T21:00:00Z"
+  },
+  "paths": [
+    {
+      "distance": 443.783,
+      "weight": 50.520404,
+      "time": 43865,
+      "transfers": 0,
+      "points_encoded": true,
+      "points_encoded_multiplier": 100000.0,
+      "bbox": [-73.82228, 40.844182, -73.82179, 40.847764],
+      "points": "oaixFxiqaMLXxTr@BaB",
+      "instructions": [
+        {
+          "distance": 13.566,
+          "heading": 234.35,
+          "sign": 0,
+          "interval": [0, 1],
+          "text": "Continue onto Middletown Road",
+          "time": 842,
+          "street_name": "Middletown Road"
+        },
+        {
+          "distance": 388.975,
+          "sign": -2,
+          "interval": [1, 2],
+          "text": "Turn left onto Kennellworth Place",
+          "time": 38899,
+          "street_name": "Kennellworth Place"
+        },
+        {
+          "distance": 41.242,
+          "sign": -2,
+          "interval": [2, 3],
+          "text": "Turn left onto Griswold Avenue",
+          "time": 4124,
+          "street_name": "Griswold Avenue"
+        },
+        {
+          "distance": 0.0,
+          "sign": 4,
+          "last_heading": 92.79624449938812,
+          "interval": [3, 3],
+          "text": "Arrive at destination",
+          "time": 0,
+          "street_name": ""
+        }
+      ],
+      "legs": [],
+      "details": {},
+      "ascend": 1.36248779296875,
+      "descend": 1.144500732421875,
+      "snapped_waypoints": "oaixFxiqaMjUS"
+    }
+  ]
+}
