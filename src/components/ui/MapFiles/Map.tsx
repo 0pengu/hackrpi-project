@@ -1,19 +1,44 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { LatLngTuple } from "leaflet";
-import Route from "./Route";
+import L, { LatLng, LatLngTuple } from "leaflet";
+import "leaflet-routing-machine";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import "../../../lib/lrm-graphhopper";
+import { useEffect } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import Heatmap from "./Heatmap";
+import Route from "./Route";
 
-export default function Map() {
-  let allCrimePoints = [];
-
+export default function Map({ start, end }: { start: LatLng; end: LatLng }) {
   const center: LatLngTuple = [40.71, -74.006];
   const zoom = 13;
-  const markerPos: LatLngTuple = center;
 
-  const start = center;
+  return (
+    <MapContainer center={center} zoom={zoom} scrollWheelZoom>
+      <MapChild start={start} end={end} />
+    </MapContainer>
+  );
+}
+
+function MapChild({ start, end }: { start: LatLng; end: LatLng }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) return;
+
+    L.Routing.control({
+      waypoints: [start, end],
+      routeWhileDragging: false,
+      showAlternatives: false,
+      // @ts-expect-error - No types for graphHopper
+      router: new L.Routing.graphHopper(
+        import.meta.env.VITE_GRAPH_HOPPER_API_KEY || ""
+      ),
+    }).addTo(map);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  let allCrimePoints = [];
 
   useEffect(() => {
     const fetchNYCCrime = async () => {
@@ -41,18 +66,18 @@ export default function Map() {
   }, []);
 
   return (
-    <MapContainer center={center} zoom={zoom} scrollWheelZoom>
+    <>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {/* <Marker position={markerPos}>
         <Popup>This is a popup</Popup>
-      </Marker> */}
+        </Marker> */}
       {allCrimePoints.map((point, index) => (
         <Route key={index} source={start} destination={point.slice(0, 2)} />
       ))}
       <Heatmap allPoints={allCrimePoints} />
-    </MapContainer>
+    </>
   );
 }
