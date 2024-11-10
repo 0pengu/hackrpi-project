@@ -3,20 +3,23 @@
     width: 100vw;
 }
 
-.leaflet-top .leaflet-right {
-    border-radius: 20rem !important;
-}
-
 /* Keyframe animation */
-@keyframes blurInFromRight {
+@keyframes blurInFromTopRight {
     0% {
-        right: -20;
-        filter: blur(10px); 
+        right: -100px; /* Start off-screen on the right */
+        filter: blur(10px);
+        opacity: 0;
     }
     100% {
-        right: 0;
-        filter: blur(0px);
+        top: 0; /* End at its normal position */
+        right: 0; /* End at its normal position */
+        filter: blur(0px); /* End with no blur */
+        opacity: 1;
     }
+}
+
+.leaflet-routing-container.leaflet-bar.leaflet-control {
+    animation: blurInFromTopRight 2s ease-in-out;
 }
 
 .leaflet-routing-add-waypoint {
@@ -28,8 +31,8 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     margin: 10px;
     padding: 10px;
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.1);
     border: 0px !important;
 }
 
@@ -40,7 +43,67 @@
 input::placeholder {
     padding-left: 8px;
     padding-right: 8px;
+    color: black !important;
 }
+
+.leaflet-routing-geocoder input {
+    border: 0px;
+    border-radius: 20px;
+    padding: 10px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    text-align: center; /* Can also use 'center' or 'right' depending on your need */
+}
+
 .leaflet-routing-remove-waypoint {
-    background: transparent;
+    display: none;
+}
+
+body > div.leaflet-routing-geocoder-result.leaflet-routing-geocoder-result-open {
+    backdrop-filter: blur(10px) !important;
+    border-radius: 4px;
+}
+body > div.leaflet-routing-geocoder-result.leaflet-routing-geocoder-result-open > table {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 0px;
+    top: 24px;
+}
+
+body > div.leaflet-routing-geocoder-result.leaflet-routing-geocoder-result-open > table > tr:hover > td:nth-child(1)  {
+    backdrop-filter: blur(40px) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid black;
+}
+
+body > div.leaflet-routing-geocoder-result.leaflet-routing-geocoder-result-open > table > tr:hover > td  {
+    backdrop-filter: blur(40px) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid black;
+    border-radius: 16px;
+}
+
+body > div.leaflet-routing-geocoder-result.leaflet-routing-geocoder-result-open > table > tr:hover {
+    backdrop-filter: blur(40px) !important;
+    background-color: rgba(255, 255, 255, 0.01) !important;
+    border: 1px solid black;
+    border-radius: 16px;
+}
+
+body > div.leaflet-routing-geocoder-result.leaflet-routing-geocoder-result-open > table > tr:active > td.leaflet-routing-geocoder-selected  {
+    backdrop-filter: blur(40px) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid black;
+    border-radius: 16px;
+}
+
+#root > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div > a.leaflet-control-zoom-in {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+}
+
+#root > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div > a.leaflet-control-zoom-out {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
 }
