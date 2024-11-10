@@ -1,4 +1,4 @@
-import RootPage from "./routes/Root";
+import RootPage from "@/routes/Root";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([

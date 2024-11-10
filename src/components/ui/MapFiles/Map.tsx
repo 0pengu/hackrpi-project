@@ -3,11 +3,11 @@
 import L, { LatLng, LatLngTuple } from "leaflet";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
-import "../../../lib/lrm-graphhopper";
+import "@/lib/lrm-graphhopper";
 import { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import Heatmap from "./Heatmap";
-import Route from "./Route";
+import Heatmap from "@/components/ui/MapFiles/Heatmap";
+import Route from "@/components/ui/MapFiles/Route";
 
 export default function Map({ start, end }: { start: LatLng; end: LatLng }) {
   const center: LatLngTuple = [40.71, -74.006];

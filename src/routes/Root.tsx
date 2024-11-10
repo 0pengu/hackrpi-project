@@ -1,6 +1,6 @@
 import { LatLng } from "leaflet";
-import Map from "../components/ui/MapFiles/Map";
-import "./Root.css";
+import Map from "@/components/ui/MapFiles/Map";
+import "@/routes/Root.css";
 
 export default function RootPage() {
   return (
