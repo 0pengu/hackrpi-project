@@ -4,8 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "client:dev": "vite",
+    "server:dev": "cd src/backend && flask run --debug",
     "build": "tsc -b && vite build",
+    "start": "cd src/backend && flask run",
     "lint": "eslint .",
     "preview": "vite preview"
   },
