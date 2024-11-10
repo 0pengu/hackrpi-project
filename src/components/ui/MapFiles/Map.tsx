@@ -1,26 +1,26 @@
 "use client";
 
-import L, { LatLng, LatLngTuple } from "leaflet";
+import Heatmap from "@/components/ui/MapFiles/Heatmap";
+import L, { LatLngTuple } from "leaflet";
+import "leaflet-control-geocoder";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "@/lib/lrm-graphhopper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import Heatmap from "@/components/ui/MapFiles/Heatmap";
-import Route from "@/components/ui/MapFiles/Route";
 
-export default function Map({ start, end }: { start: LatLng; end: LatLng }) {
+export default function Map() {
   const center: LatLngTuple = [40.71, -74.006];
   const zoom = 13;
 
   return (
     <MapContainer center={center} zoom={zoom} scrollWheelZoom>
-      <MapChild start={start} end={end} />
+      <MapChild />
     </MapContainer>
   );
 }
 
-function MapChild({ start, end }: { start: LatLng; end: LatLng }) {
+function MapChild() {
   const map = useMap();
 
   useEffect(() => {
@@ -90,6 +90,32 @@ function MapChild({ start, end }: { start: LatLng; end: LatLng }) {
     };
     fetchNYCData();
   }, []);
+
+  useEffect(() => {
+    if (!map && !dataLoaded) return;
+
+    // @ts-expect-error - No typings for this
+    const graphHopper = new L.Routing.graphHopper(
+      import.meta.env.VITE_GRAPH_HOPPER_API_KEY || "",
+      {
+        avoid: allCrimePoints,
+      }
+    );
+
+    const control = L.Routing.control({
+      routeWhileDragging: false,
+      showAlternatives: true,
+      router: graphHopper,
+      // @ts-expect-error - No typings for this
+      geocoder: new L.Control.Geocoder.nominatim(),
+    });
+
+    control.addTo(map);
+
+    return () => {
+      map.removeControl(control);
+    };
+  }, [map, allCrimePoints, dataLoaded]);
 
   return (
     <>
