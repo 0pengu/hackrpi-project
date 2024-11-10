@@ -1,44 +1,29 @@
 "use client";
 
-import L, { LatLng, LatLngTuple } from "leaflet";
+import Heatmap from "@/components/ui/MapFiles/Heatmap";
+import L, { LatLngTuple } from "leaflet";
+import "leaflet-control-geocoder";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "@/lib/lrm-graphhopper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import Heatmap from "@/components/ui/MapFiles/Heatmap";
-import Route from "@/components/ui/MapFiles/Route";
 
-export default function Map({ start, end }: { start: LatLng; end: LatLng }) {
+export default function Map() {
   const center: LatLngTuple = [40.71, -74.006];
   const zoom = 13;
 
   return (
     <MapContainer center={center} zoom={zoom} scrollWheelZoom>
-      <MapChild start={start} end={end} />
+      <MapChild />
     </MapContainer>
   );
 }
 
-function MapChild({ start, end }: { start: LatLng; end: LatLng }) {
+function MapChild() {
   const map = useMap();
-
-  useEffect(() => {
-    if (!map) return;
-
-    L.Routing.control({
-      waypoints: [start, end],
-      routeWhileDragging: false,
-      showAlternatives: false,
-      // @ts-expect-error - No types for graphHopper
-      router: new L.Routing.graphHopper(
-        import.meta.env.VITE_GRAPH_HOPPER_API_KEY || ""
-      ),
-    }).addTo(map);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  let allCrimePoints = [];
+  const [allCrimePoints, setAllCrimePoints] = useState<L.HeatLatLngTuple[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
     const fetchNYCCrime = async () => {
@@ -59,11 +44,45 @@ function MapChild({ start, end }: { start: LatLng; end: LatLng }) {
       const data = await response.json();
 
       for (const crime of data) {
-        allCrimePoints.push([crime.latitude, crime.longitude, 0.7]);
+        if (crime.latitude && crime.longitude) {
+          setAllCrimePoints((prev) => [
+            ...prev,
+            [Number(crime.latitude), Number(crime.longitude), 0.7],
+          ]);
+        }
       }
+
+      setDataLoaded(true);
     };
+
     fetchNYCCrime();
   }, []);
+
+  useEffect(() => {
+    if (!map && !dataLoaded) return;
+
+    // @ts-expect-error - No typings for this
+    const graphHopper = new L.Routing.graphHopper(
+      import.meta.env.VITE_GRAPH_HOPPER_API_KEY || "",
+      {
+        avoid: allCrimePoints,
+      }
+    );
+
+    const control = L.Routing.control({
+      routeWhileDragging: false,
+      showAlternatives: true,
+      router: graphHopper,
+      // @ts-expect-error - No typings for this
+      geocoder: new L.Control.Geocoder.nominatim(),
+    });
+
+    control.addTo(map);
+
+    return () => {
+      map.removeControl(control);
+    };
+  }, [map, allCrimePoints, dataLoaded]);
 
   return (
     <>
@@ -74,9 +93,6 @@ function MapChild({ start, end }: { start: LatLng; end: LatLng }) {
       {/* <Marker position={markerPos}>
         <Popup>This is a popup</Popup>
         </Marker> */}
-      {allCrimePoints.map((point, index) => (
-        <Route key={index} source={start} destination={point.slice(0, 2)} />
-      ))}
       <Heatmap allPoints={allCrimePoints} />
     </>
   );

@@ -7,15 +7,15 @@
   L.Routing = L.Routing || {};
 
   L.Routing.GraphHopper = L.Evented.extend({
-    options: {
-      serviceUrl: "https://graphhopper.com/api/1/route",
-      timeout: 30 * 1000,
-      urlParameters: {},
-    },
-
     initialize: function (apiKey, options) {
       this._apiKey = apiKey;
       L.Util.setOptions(this, options);
+      this.options = {
+        ...options,
+        serviceUrl: "https://graphhopper.com/api/1/route",
+        timeout: 30 * 1000,
+        urlParameters: {},
+      };
     },
 
     route: function (waypoints, callback, context, options) {
@@ -72,7 +72,6 @@
             if (xhr.status === 200) {
               try {
                 var data = JSON.parse(xhr.response); // Parse the JSON response
-                console.log(data);
                 this._routeDone(data, wps, callback, context); // Handle the response data
               } catch (e) {
                 callback.call(context || callback, {
@@ -99,6 +98,32 @@
         }
       }, this);
 
+      var avoid = [];
+
+      if (this.options.avoid) {
+        for (let i = 0; i < this.options.avoid.length; i++) {
+          if (avoid.toString().length < 12500) {
+            if (this.options.avoid[i]) {
+              avoid.push([this.options.avoid[i][0], this.options.avoid[i][1]]);
+            }
+          }
+        }
+      }
+
+      console.log(avoid);
+
+      console.log(
+        this.options.avoid.map(function (point) {
+          return [
+            [point[1] + 0.01, point[0] + 0.01],
+            [point[1] + 0.01, point[0] - 0.01],
+            [point[1] - 0.01, point[0] - 0.01],
+            [point[1] - 0.01, point[0] + 0.01],
+            [point[1] + 0.01, point[0] + 0.01],
+          ];
+        })
+      );
+
       var requestBody = {
         points: waypoints.map(function (wp) {
           return [wp.latLng.lng, wp.latLng.lat];
@@ -117,13 +142,15 @@
               geometry: {
                 type: "Polygon",
                 coordinates: [
-                  [
-                    [-73.823911, 40.846319],
-                    [-73.820269, 40.846175],
-                    [-73.820309, 40.844694],
-                    [-73.82409, 40.8443],
-                    [-73.823911, 40.846319],
-                  ],
+                  avoid.map(function (point) {
+                    return [
+                      [point[0] + 1, point[1] + 1],
+                      [point[0] + 1, point[1] - 1],
+                      [point[0] - 1, point[1] - 1],
+                      [point[0] - 1, point[1] + 1],
+                      [point[0] + 1, point[1] + 1],
+                    ];
+                  }),
                 ],
               },
             },
