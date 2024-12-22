@@ -1,10 +1,8 @@
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, send_from_directory
 from flask_caching import Cache
 import requests
-from datetime import datetime
 import os
 from typing import Dict, List
-import geojson
 
 app = Flask(__name__, static_folder='dist', template_folder='dist')
 
