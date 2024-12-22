@@ -6,7 +6,7 @@ import os
 from typing import Dict, List
 import geojson
 
-app = Flask(__name__, static_folder='../../dist', template_folder='../../dist')
+app = Flask(__name__, static_folder='dist', template_folder='dist')
 
 # Configure caching
 cache = Cache(app, config={
@@ -86,5 +86,5 @@ def serve(path):
         return send_from_directory(app.static_folder if app.static_folder else "", 'index.html')
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
