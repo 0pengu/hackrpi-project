@@ -1,12 +1,22 @@
-from flask import Blueprint, jsonify
+from flask import Flask, jsonify, send_from_directory
+from flask_caching import Cache
 import requests
-from extensions import cache
+import os
+from typing import Dict, List
+
+app = Flask(__name__, static_folder='dist', template_folder='dist')
+
+# Configure caching
+cache = Cache(app, config={
+    'CACHE_TYPE': 'simple',
+    'CACHE_DEFAULT_TIMEOUT': 500
+})
 
 
-api_route = Blueprint("api", __name__, url_prefix="/api")
+NYC_API_URL = "https://data.cityofnewyork.us/resource/t95h-5fsr.json"
 
 
-@api_route.route('/locations')
+@app.route('/api/locations')
 @cache.cached(timeout=3600, query_string=True)
 def get_locations():
     try:
@@ -21,7 +31,7 @@ def get_locations():
         return jsonify({'error': str(e)}), 500
 
 
-def transform_to_geojson(data: list[dict]) -> dict:
+def transform_to_geojson(data: List[Dict]) -> Dict:
     features = []
 
     for d in data:
@@ -64,4 +74,15 @@ def get_cached_data():
     return response.json()
 
 
-NYC_API_URL = "https://data.cityofnewyork.us/resource/t95h-5fsr.json"
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    print(app.static_folder)
+    if path != "" and os.path.exists((app.static_folder + '/' + path if app.static_folder else "")):
+        return send_from_directory(app.static_folder if app.static_folder else "", path)
+    else:
+        return send_from_directory(app.static_folder if app.static_folder else "", 'index.html')
+
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
