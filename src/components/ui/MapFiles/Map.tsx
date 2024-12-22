@@ -132,7 +132,7 @@ function MapChild() {
       router: graphHopper,
       altLineOptions: {
         extendToWaypoints: false,
-        styles: [{ color: "red", opacity: 0.5, weight: 4 }],
+        styles: [{ color: "gray", opacity: 1, weight: 4 }],
         missingRouteTolerance: 10,
       },
       fitSelectedRoutes: true,
