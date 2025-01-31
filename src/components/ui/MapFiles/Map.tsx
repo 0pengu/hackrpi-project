@@ -14,7 +14,12 @@ export default function Map() {
   const zoom = 13;
 
   return (
-    <MapContainer center={center} zoom={zoom} scrollWheelZoom>
+    <MapContainer
+      center={center}
+      zoom={zoom}
+      scrollWheelZoom
+      preferCanvas={false}
+    >
       <MapChild />
     </MapContainer>
   );
@@ -132,7 +137,16 @@ function MapChild() {
       router: graphHopper,
       altLineOptions: {
         extendToWaypoints: false,
-        styles: [{ color: "gray", opacity: 1, weight: 4 }],
+        styles: [
+          {
+            color: "purple",
+            opacity: 0.8,
+            weight: 5,
+            className: "text-blue-500 !border-2 !border-white",
+            dashArray: "0, 8",
+            lineCap: "round",
+          },
+        ],
         missingRouteTolerance: 10,
       },
       fitSelectedRoutes: true,
